@@ -124,6 +124,7 @@ func copyFile(tarReader io.Reader, header *tar.Header, targetDir string, info fs
 			targetDir, header.Name, err,
 		)
 	}
+	defer outFile.Close()
 
 	if _, err := io.Copy(outFile, tarReader); err != nil {
 		_ = outFile.Close()
