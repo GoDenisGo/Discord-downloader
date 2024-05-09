@@ -89,7 +89,7 @@ func untar(gzipReader *gzip.Reader, targetDir string) error {
 		// Create directories or files depending on the type:
 		switch header.Typeflag {
 		case tar.TypeDir:
-			if err := copyFolder(targetDir, header); err != nil {
+			if err := copyFolder(targetDir, header, info); err != nil {
 				return err
 			}
 		case tar.TypeReg:
@@ -103,8 +103,8 @@ func untar(gzipReader *gzip.Reader, targetDir string) error {
 /*
 func copyFolder copies the directory structure of the archive into the file system, to be saved permanently.
 */
-func copyFolder(targetDir string, header *tar.Header) error {
-	if err := os.MkdirAll(filepath.Join(targetDir, header.Name), 0755); err != nil {
+func copyFolder(targetDir string, header *tar.Header, info fs.FileInfo) error {
+	if err := os.MkdirAll(filepath.Join(targetDir, header.Name), info.Mode()); err != nil {
 		return fmt.Errorf("Error trying to make a new folder at the location %s%s:\n%s.\n",
 			targetDir, header.Name, err,
 		)
